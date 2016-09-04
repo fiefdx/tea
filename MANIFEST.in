@@ -1,0 +1,6 @@
+include README
+include ChangeLog
+include TODO
+recursive-include lib strtea.h
+recursive-include test *.py
+recursive-include examples *.py
