@@ -129,7 +129,6 @@ def tea_str_c_encrypt(v, k, iterations = 32):
     k = str(k)
     # ascii str to bin str
     k = binascii.unhexlify(k)
-    # LOG.info(">>>>>>>>>>>>>>k: %s",type(k))
     result = ""
     end_char = "\0"
     fill_n_or = 0xf8
@@ -169,21 +168,16 @@ def tea_str_c_decrypt(v, k, iterations = 32):
     pos = 0
     k0, k1, k2, k3 = struct.unpack(">LLLL", k)
     k_c = np.ascontiguousarray([k0, k1, k2, k3], dtype = np.uint32)
-    print "k_c: %s" % list(k_c)
+    # "k_c: %s" % list(k_c)
     v_pack_str = ">" + "LL"*(v_length/8)
     tube_v = struct.unpack(v_pack_str, v)
-    print "tube_v: %s" % list(tube_v)
     v_c = np.ascontiguousarray(tube_v, dtype = np.uint32)
     pos = strtea.tea_c_str_decrypt(v_c, k_c, v_length/4, iterations)
-    print "pos: %x" % pos
     # pos = strtea.tea_c_str_pointer_decrypt(v_c, k_c, v_length/4, iterations)
     plaintext = struct.pack('>L', pos)
-    print "plaintext: %s, length: %d" % (plaintext, len(plaintext))
     pos = (ord(plaintext[0]) & 0x07) + 2
     # LOG.info("pos: %s", pos)
     # pos = 6 # tmp
-    print "ord(plaintext[0]): %x" % ord(plaintext[0])
-    print "pos: %s" % pos
     for n,i in enumerate(v_c):
         result += struct.pack(">L", i)
     # if result[-7:] != "\0" * 7: return None
